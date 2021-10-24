@@ -8,7 +8,7 @@ function App() {
   const [name, setName] = useState('');
   const [type, setType] = useState('');
   const [isCreate, setCreate] = useState(false);
-  const [disable, setDisable] = useState(false);
+  const [disable, setDisable] = useState([]);
 
   const tasks = [
     {
@@ -71,31 +71,38 @@ function App() {
   }
 
   const loadTasks = (arr, n) => {
-    var pertask = [];
-    // shuffle array of tasks
-    for (var i = arr.length-1; i>0; i--) {
-      var j = Math.floor(Math.random()*(i+1));
-      var temp = arr[i];
-      arr[i] = arr[j];
-      arr[j] = temp;
-    }
-    // add first 5 of shuffled array to displayed array
-    for (var b = 0; b < n; b++) {
-      pertask.push(arr[b]);
-    }
-    console.log(pertask);
+
+      var pertask = [];
+      // shuffle array of tasks
+      for (var i = arr.length-1; i>0; i--) {
+        var j = Math.floor(Math.random()*(i+1));
+        var temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+      }
+      // add first 5 of shuffled array to displayed array
+      // set disabled to array of false
+      for (var b = 0; b < n; b++) {
+        pertask.push(arr[b]);
+      }
+      // const tempDisable = [];
+      // for (var j = 0; j < arr.length; j++) {
+      //   tempDisable.push(false);
+      // }
+      // setDisable(tempDisable);
+      console.log(pertask);
+      
+
     return (
       <ol>
-        {pertask.map((ta, kie) => (
+        {pertask.map((ta) => (
           <div>
-            <form onSubmit={(e) => doTask(ta.eta, e)}>
-              {/* <li key={ta.description}>{ta.description} </li>
-              <ul key={ta.eta}>ETA: {ta.eta}</ul> */}
-              <Card key={kie}>
+            <form onSubmit={(e) => DoTask(ta.description, ta.kie, ta.eta, e)}>
+              <Card key={ta.kie}>
                 <Card.Body>
                   <Card.Title>{ta.description}</Card.Title>
                   <Card.Text>ETA: {ta.eta}ms</Card.Text>
-                  <Button type="submit" key={ta.kie} disabled={disable} size="sm">Do Task</Button>
+                  <Button type="submit" key={ta.kie} disabled={disable[ta.kie]} size="sm">Do Task</Button>
                 </Card.Body>
               </Card>
             </form>
@@ -105,11 +112,16 @@ function App() {
     );
   }
 
-  const doTask = (eta, e) => {
+  function DoTask(desc, kie, eta, e) {
     e.preventDefault();
     console.log(eta);
     //set timeout
-
+      const timer = setTimeout(() => {
+        alert(desc+ ' took '+eta+' ms');
+        // const clone = [...disable];
+        // clone[kie] = true;
+        // setDisable(clone);
+      }, eta);
   }
 
   return (
