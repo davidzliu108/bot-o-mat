@@ -1,51 +1,65 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import React, {useState} from 'react';
+import React, {useState, useEffect } from 'react';
+import Card from 'react-bootstrap/Card'
 
 function App() {
   const [name, setName] = useState('');
   const [type, setType] = useState('');
   const [isCreate, setCreate] = useState(false);
+  const [disable, setDisable] = useState(false);
 
   const tasks = [
     {
       description: 'do the dishes',
       eta: 1000,
+      kie: 0
     },{
       description: 'sweep the house',
       eta: 3000,
+      kie: 1
     },{
       description: 'do the laundry',
       eta: 10000,
+      kie: 2
     },{
       description: 'take out the recycling',
       eta: 4000,
+      kie: 3
     },{
       description: 'make a sammich',
       eta: 7000,
+      kie: 4
     },{
       description: 'mow the lawn',
       eta: 20000,
+      kie: 5
     },{
       description: 'rake the leaves',
       eta: 18000,
+      kie: 6
     },{
       description: 'give the dog a bath',
       eta: 14500,
+      kie: 7
     },{
       description: 'bake some cookies',
       eta: 8000,
+      kie: 8
     },{
       description: 'wash the car',
       eta: 20000,
+      kie: 9
     },
   ];  
 
+  // create object with bot name and bot type
   const createSubmit = (e) => {
     e.preventDefault();
     const botO = { name, type };
     console.log(botO);
+    // only allow bot to be created if both fields are complete
     if (botO.name==='' || botO.type==='') {
       setCreate(false);
       if (botO.name===''&& botO.type==='') alert('Please enter a bot name and select a bot type!');
@@ -58,7 +72,6 @@ function App() {
 
   const loadTasks = (arr, n) => {
     var pertask = [];
-
     // shuffle array of tasks
     for (var i = arr.length-1; i>0; i--) {
       var j = Math.floor(Math.random()*(i+1));
@@ -73,11 +86,30 @@ function App() {
     console.log(pertask);
     return (
       <ol>
-        {pertask.map((ta) => (
-          <li key={ta.description}>{ta.description}  ETA:{ta.eta}</li>
+        {pertask.map((ta, kie) => (
+          <div>
+            <form onSubmit={(e) => doTask(ta.eta, e)}>
+              {/* <li key={ta.description}>{ta.description} </li>
+              <ul key={ta.eta}>ETA: {ta.eta}</ul> */}
+              <Card key={kie}>
+                <Card.Body>
+                  <Card.Title>{ta.description}</Card.Title>
+                  <Card.Text>ETA: {ta.eta}ms</Card.Text>
+                  <Button type="submit" key={ta.kie} disabled={disable} size="sm">Do Task</Button>
+                </Card.Body>
+              </Card>
+            </form>
+          </div>
         ))}
       </ol>
     );
+  }
+
+  const doTask = (eta, e) => {
+    e.preventDefault();
+    console.log(eta);
+    //set timeout
+
   }
 
   return (
@@ -107,9 +139,10 @@ function App() {
       <div className="btn-toolbar" role="toolbar">
         <div className="btn-group mr-2" role="group">
           <select 
-            value={type}
+            defaultValue="Select Type"
             onChange={(e)=> {setType(e.target.value); setCreate(false)}}
           >
+            <option value="Select Type" disabled>Select Type</option>
             <option value="Unipedal">Unipedal</option>
             <option value="Bipedal">Bipedal</option>
             <option value="Quadrupedal">Quadrupedal</option>
@@ -128,7 +161,7 @@ function App() {
       </div>
       <hr />
       <div className="d-flex justify-content-center">
-        {isCreate && <h2>You created {name} of bot type {type}!</h2>}
+        {isCreate && <h2>You created {name} of type {type}!</h2>}
       </div>
       <div className="d-flex justify-content-center">
         {isCreate && loadTasks(tasks, 5)}
