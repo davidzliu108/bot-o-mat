@@ -57,6 +57,11 @@ function App() {
   // create object with bot name and bot type
   const createSubmit = (e) => {
     e.preventDefault();
+    const clone = [...disable];
+        for (var i = 0; i < 10; i++) {
+          clone[i] = false;
+        }
+        setDisable(clone);
     const botO = { name, type };
     console.log(botO);
     // only allow bot to be created if both fields are complete
@@ -87,7 +92,7 @@ function App() {
       }
       // const tempDisable = [];
       // for (var j = 0; j < arr.length; j++) {
-      //   tempDisable.push(false);
+      //   tempDisable[j]=false;
       // }
       // setDisable(tempDisable);
       console.log(pertask);
@@ -118,9 +123,11 @@ function App() {
     //set timeout
       const timer = setTimeout(() => {
         alert(desc+ ' took '+eta+' ms');
-        // const clone = [...disable];
-        // clone[kie] = true;
-        // setDisable(clone);
+        const clone = [...disable];
+        clone[kie] = true;
+        setDisable(clone);
+
+
       }, eta);
   }
 
