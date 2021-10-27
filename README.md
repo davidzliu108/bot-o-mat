@@ -1,10 +1,6 @@
 # BOT-O-MAT by David Liu
 
-Simple Bot-O-Mat website created with React.js
-
-## Table of contents
-* [Technologies] (#technologies)
-* [Setup] (#setup)
+Bot-O-Mat website created with React.js
 
 ## Technologies
 Project is created with:
@@ -12,10 +8,11 @@ Project is created with:
 * Bootstrap version: 5.1.3
 
 ## Setup
-To run this project, install it locally using npm:
+To run this project, first clone or download the repository onto your local machine and then install it locally using npm:
 
 ```
+$ cd bot-o-mat-davidzliu108
 $ npm install
 $ npm start
 ```
-
+Thank you!
