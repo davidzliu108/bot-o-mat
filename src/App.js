@@ -1,16 +1,27 @@
 import 'bootstrap/dist/css/bootstrap.css';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
 import React, { useState, useEffect } from 'react';
-import Card from 'react-bootstrap/Card'
+import { Container, Card, Spinner, Form, Button } from 'react-bootstrap';
 
 function App() {
+  // set bot name
   const [name, setName] = useState('');
+  // set bot type
   const [type, setType] = useState('');
+
+  // If isCreate is true, bot can be created. If false, it cannot be created
+  // controls exclamation of bot name and bot type created
+  // controls the display of task cards. If true, cards are displayed. If false, cards are not displayed.
   const [isCreate, setCreate] = useState(false);
+
+  // array of booleans. If true, task card is displayed. If false, it is not displayed.
   const [disable, setDisable] = useState([]);
+
+  // array of tasks displayed. 
   const [pertask, setPertask] = useState([]);
-  const [a, seta] = useState(false);
+
+  const [doingTask, setDoingTask] = useState(false);
+
+  const [tasque, setTasque] = useState('');
 
   const tasks = [
     {
@@ -57,33 +68,35 @@ function App() {
   ];
 
   // create object with bot name and bot type
+  const botO = { name, type };
+
+  // triggers after create button is clicked
   const createSubmit = (e) => {
     e.preventDefault();
+    // setting every element in the disable array to true
     const clone = [...disable];
     for (var i = 0; i < 10; i++) {
-      clone[i] = false;
+      clone[i] = true;
     }
     setDisable(clone);
-    const botO = { name, type };
     console.log(botO);
     // only allow bot to be created if both fields are complete
     if (botO.name === '' || botO.type === '') {
       setCreate(false);
-      seta(false);
       if (botO.name === '' && botO.type === '') alert('Please enter a bot name and select a bot type!');
       if (botO.name === '' && botO.type !== '') alert('Plase enter a bot name!');
       if (botO.name !== '' && botO.type === '') alert('Please select a bot type!');
     } else {
       setCreate(true);
-      seta(true);
     }
   }
 
+  // takes in the original task array with 10 tasks and n=5
+  // handles creating new task array to be displayed with 5 random tasks
   const loadTasks = (arr, n) => {
     console.log("call loadtask");
-
     var ptask = [];
-    // shuffle array of tasks
+    // shuffle original array of tasks
     for (var i = arr.length - 1; i > 0; i--) {
       var j = Math.floor(Math.random() * (i + 1));
       var temp = arr[i];
@@ -91,53 +104,66 @@ function App() {
       arr[j] = temp;
     }
     // add first 5 of shuffled array to displayed array
-    // set disabled to array of false
     for (var b = 0; b < n; b++) {
       ptask.push(arr[b]);
     }
     setPertask(ptask);
     console.log(pertask);
-    // return (
-    //   <ol>
-    //     {pertask.map((ta) => (
-    //       <div>
-    //         <form onSubmit={(e) => DoTask(ta.description, ta.kie, ta.eta, e)}>
-    //           <Card key={ta.kie}>
-    //             {console.log(ta)}
-    //             <Card.Body>
-    //               <Card.Title>{ta.description}</Card.Title>
-    //               <Card.Text>ETA: {ta.eta}ms</Card.Text>
-    //               <Button type="submit" key={ta.kie} disabled={disable[ta.kie]} size="sm">Do Task</Button>
-    //             </Card.Body>
-    //           </Card>
-    //         </form>
-    //       </div>
-    //     ))}
-    //   </ol>
-    // );
   }
 
+  // triggers after Do Task button is clicked, removes the task card after the duration of the eta
   function DoTask(desc, kie, eta, e) {
     e.preventDefault();
     console.log(eta);
-    //set timeout
-    const timer = setTimeout(() => {
-      alert(desc + ' took ' + eta + ' ms');
-      const clone = [...disable];
-      clone[kie] = true;
-      setDisable(clone);
+    // handles the strenghts and weaknesses for each bot type and stores the new modified eta into modEta
+    var modEta = eta;
+    if (botO.type === 'Unipedal') {
+      if (desc === 'do the dishes') modEta = eta - 1000;
+      if (desc === 'give the dog a bath') modEta = eta + 1000;
+    }
+    if (botO.type === 'Bipedal') {
+      if (desc === 'sweep the house') modEta = eta - 1000;
+      if (desc === 'bake some cookies') modEta = eta + 1000;
+    }
+    if (botO.type === 'Quadrupedal') {
+      if (desc === 'mow the lawn') modEta = eta - 1000;
+      if (desc === 'wash the car') modEta = eta + 1000;
+    }
+    if (botO.type === 'Arachnid') {
+      if (desc === 'wash the car') modEta = eta - 1000;
+      if (desc === 'do the dishes') modEta = eta + 1000;
+    }
+    if (botO.type === 'Radial') {
+      if (desc === 'make a sammich') modEta = eta - 1000;
+      if (desc === 'sweep the house') modEta = eta + 1000;
+    }
+    if (botO.type === 'Aeronautical') {
+      if (desc === 'take out the recycling') modEta = eta - 1000;
+      if (desc === 'do the dishes') modEta = eta + 1000;
+    }
 
-    }, eta);
+    setTasque(desc);
+    setDoingTask(true);
+    // sets disable to false for the task done after the duration of modEta
+    const timer = setTimeout(() => {
+      alert(desc + ' took ' + modEta / 1000 + ' seconds');
+      const clone = [...disable];
+      clone[kie] = false;
+      setDisable(clone);
+      setDoingTask(false);
+    }, modEta);
   }
 
+  // call loadTasks
   useEffect(() => {
     loadTasks(tasks, 5);
-  }, [a])
+  }, [isCreate])
 
 
   return (
-    <div className="App">
-      <header className="d-flex justify-content-center">
+    <div className="App container">
+      <header className="text-center">
+        <img style={{width:'90px' }}src="/robotEmoji.png" alt="Robot" />
         <h1>
           BOT-O-MAT
         </h1>
@@ -183,23 +209,38 @@ function App() {
         </div>
       </div>
       <hr />
+      <p>*Your bot can only complete tasks one at a time! If you attempt to do a task before your current task is complete, the current task will be added back into the task list!</p>
+      <p><b>Bot Type Information:</b> <i>(<b class="text-success">Strength:</b> -1 second, <b class="text-danger">Weakness:</b> +1 second) </i></p>
+      <li><b>Unipedal:</b> <b class="text-success">Strength:</b> do the dishes, <b class="text-danger">Weakness: </b>give the dog a bath</li>
+      <li><b>Bipedal:</b> <b class="text-success">Strength:</b> sweep the house, <b class="text-danger">Weakness: </b> bake some cookies</li>
+      <li><b>Quadrupedal:</b> <b class="text-success">Strength:</b> mow the lawn, <b class="text-danger">Weakness: </b> wash the car</li>
+      <li><b>Arachnid:</b> <b class="text-success">Strength:</b> wash the car, <b class="text-danger">Weakness: </b> do the dishes</li>
+      <li><b>Radial:</b> <b class="text-success">Strength:</b> make a sammich, <b class="text-danger">Weakness: </b> sweep the house</li>
+      <li><b>Aeronautical:</b> <b class="text-success">Strength:</b> take out the recycling, <b class="text-danger">Weakness: </b> do the dishes</li>
+      <hr />
       <div className="d-flex justify-content-center">
-        {isCreate && <h2>You created {name} of type {type}!</h2>}
-      </div>
+        {isCreate && <h2>You created {name} of type {type}!</h2>} </div> 
+      { doingTask && <div className="text-center" style={{'marginTop': '1rem', 'marginBottom': '1rem'}}>
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+        <br />
+        <p>Task {tasque} in progress</p>
+      </div>}
       <div className="d-flex justify-content-center">
-        {/* {isCreate && loadTasks(tasks, 5)} */}
-        {(a === false) ? <></> :
+        {(isCreate === false) ? <></> :
           <ol>
             {pertask.map((ta) => (
               <div>
                 <form onSubmit={(e) => DoTask(ta.description, ta.kie, ta.eta, e)}>
-                  <Card key={ta.kie}>
-                    <Card.Body>
-                      <Card.Title>{ta.description}</Card.Title>
-                      <Card.Text>ETA: {ta.eta}ms</Card.Text>
-                      <Button type="submit" key={ta.kie} disabled={disable[ta.kie]} size="sm">Do Task</Button>
-                    </Card.Body>
-                  </Card>
+                  {disable[ta.kie] &&
+                    <Card key={ta.kie}>
+                      <Card.Body>
+                        <Card.Title>{ta.description}</Card.Title>
+                        <Card.Text>ETA: {ta.eta / 1000} seconds</Card.Text>
+                        <Button type="submit" disabled={doingTask} key={ta.kie} size="sm">Do Task</Button>
+                      </Card.Body>
+                    </Card>}
                 </form>
               </div>
             ))}
