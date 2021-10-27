@@ -1,6 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import React, { useState, useEffect } from 'react';
-import { Container, Card, Spinner, Form, Button } from 'react-bootstrap';
+import { Card, Spinner, Form, Button } from 'react-bootstrap';
 
 function App() {
   // set bot name
@@ -19,8 +19,11 @@ function App() {
   // array of tasks displayed. 
   const [pertask, setPertask] = useState([]);
 
+  // controls the task progress animation and statement
+  // also disables all buttons when one task is in progress
   const [doingTask, setDoingTask] = useState(false);
 
+  // store the task description so that it can be displayed while the task is in progress
   const [tasque, setTasque] = useState('');
 
   const tasks = [
@@ -154,7 +157,7 @@ function App() {
     }, modEta);
   }
 
-  // call loadTasks
+  // call loadTasks if isCreate is true
   useEffect(() => {
     loadTasks(tasks, 5);
   }, [isCreate])
@@ -163,7 +166,7 @@ function App() {
   return (
     <div className="App container">
       <header className="text-center">
-        <img style={{width:'90px' }}src="/robotEmoji.png" alt="Robot" />
+        <img style={{ width: '90px' }} src="/robotEmoji.png" alt="Robot" />
         <h1>
           BOT-O-MAT
         </h1>
@@ -209,7 +212,6 @@ function App() {
         </div>
       </div>
       <hr />
-      <p>*Your bot can only complete tasks one at a time! If you attempt to do a task before your current task is complete, the current task will be added back into the task list!</p>
       <p><b>Bot Type Information:</b> <i>(<b class="text-success">Strength:</b> -1 second, <b class="text-danger">Weakness:</b> +1 second) </i></p>
       <li><b>Unipedal:</b> <b class="text-success">Strength:</b> do the dishes, <b class="text-danger">Weakness: </b>give the dog a bath</li>
       <li><b>Bipedal:</b> <b class="text-success">Strength:</b> sweep the house, <b class="text-danger">Weakness: </b> bake some cookies</li>
@@ -219,8 +221,8 @@ function App() {
       <li><b>Aeronautical:</b> <b class="text-success">Strength:</b> take out the recycling, <b class="text-danger">Weakness: </b> do the dishes</li>
       <hr />
       <div className="d-flex justify-content-center">
-        {isCreate && <h2>You created {name} of type {type}!</h2>} </div> 
-      { doingTask && <div className="text-center" style={{'marginTop': '1rem', 'marginBottom': '1rem'}}>
+        {isCreate && <h2>You created {name} of type {type}!</h2>} </div>
+        {doingTask && <div className="text-center" style={{ 'marginTop': '1rem', 'marginBottom': '1rem' }}>
         <Spinner animation="border" role="status">
           <span className="visually-hidden">Loading...</span>
         </Spinner>
