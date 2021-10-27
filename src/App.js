@@ -212,13 +212,13 @@ function App() {
         </div>
       </div>
       <hr />
-      <p><b>Bot Type Information:</b> <i>(<b class="text-success">Strength:</b> -1 second, <b class="text-danger">Weakness:</b> +1 second) </i></p>
-      <li><b>Unipedal:</b> <b class="text-success">Strength:</b> do the dishes, <b class="text-danger">Weakness: </b>give the dog a bath</li>
-      <li><b>Bipedal:</b> <b class="text-success">Strength:</b> sweep the house, <b class="text-danger">Weakness: </b> bake some cookies</li>
-      <li><b>Quadrupedal:</b> <b class="text-success">Strength:</b> mow the lawn, <b class="text-danger">Weakness: </b> wash the car</li>
-      <li><b>Arachnid:</b> <b class="text-success">Strength:</b> wash the car, <b class="text-danger">Weakness: </b> do the dishes</li>
-      <li><b>Radial:</b> <b class="text-success">Strength:</b> make a sammich, <b class="text-danger">Weakness: </b> sweep the house</li>
-      <li><b>Aeronautical:</b> <b class="text-success">Strength:</b> take out the recycling, <b class="text-danger">Weakness: </b> do the dishes</li>
+      <p><b>Bot Type Information:</b> <i>(<b className="text-success">Strength:</b> -1 second, <b className="text-danger">Weakness:</b> +1 second) </i></p>
+      <li><b>Unipedal:</b> <b className="text-success">Strength:</b> do the dishes, <b className="text-danger">Weakness: </b>give the dog a bath</li>
+      <li><b>Bipedal:</b> <b className="text-success">Strength:</b> sweep the house, <b className="text-danger">Weakness: </b> bake some cookies</li>
+      <li><b>Quadrupedal:</b> <b className="text-success">Strength:</b> mow the lawn, <b className="text-danger">Weakness: </b> wash the car</li>
+      <li><b>Arachnid:</b> <b className="text-success">Strength:</b> wash the car, <b className="text-danger">Weakness: </b> do the dishes</li>
+      <li><b>Radial:</b> <b className="text-success">Strength:</b> make a sammich, <b className="text-danger">Weakness: </b> sweep the house</li>
+      <li><b>Aeronautical:</b> <b className="text-success">Strength:</b> take out the recycling, <b className="text-danger">Weakness: </b> do the dishes</li>
       <hr />
       <div className="d-flex justify-content-center">
         {isCreate && <h2>You created {name} of type {type}!</h2>} </div>
@@ -233,14 +233,14 @@ function App() {
         {(isCreate === false) ? <></> :
           <ol>
             {pertask.map((ta) => (
-              <div>
+              <div key={ta.kie}>
                 <form onSubmit={(e) => DoTask(ta.description, ta.kie, ta.eta, e)}>
                   {disable[ta.kie] &&
-                    <Card key={ta.kie}>
+                    <Card>
                       <Card.Body>
                         <Card.Title>{ta.description}</Card.Title>
                         <Card.Text>ETA: {ta.eta / 1000} seconds</Card.Text>
-                        <Button type="submit" disabled={doingTask} key={ta.kie} size="sm">Do Task</Button>
+                        <Button type="submit" disabled={doingTask} size="sm">Do Task</Button>
                       </Card.Body>
                     </Card>}
                 </form>
