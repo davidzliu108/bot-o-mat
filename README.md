@@ -1,7 +1,7 @@
 # BOT-O-MAT by David Liu
 
 Bot-O-Mat website created with React.js
-The website is deployed at: https://bot-o-mat-davidzliu.herokuapp.com/
+* The website is deployed at: https://bot-o-mat-davidzliu.herokuapp.com/
 
 ## Technologies
 Project is created with:
